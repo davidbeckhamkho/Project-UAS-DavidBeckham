@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="350.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uaspbol.SimulationController">
+   <children>
+      <Line endX="499.0" layoutY="80.0" strokeWidth="3.0" />
+      <Label layoutX="144.0" layoutY="25.0" text="BUY SIMULATION">
+         <font>
+            <Font name="System Bold" size="25.0" />
+         </font>
+      </Label>
+      <Button fx:id="btnBack" layoutX="197.0" layoutY="300.0" mnemonicParsing="false" onAction="#backClick" text="Back to Inventory" />
+      <DatePicker fx:id="date" layoutX="265.0" layoutY="89.0" prefHeight="31.0" prefWidth="154.0" />
+      <Label layoutX="107.0" layoutY="94.0" text="Date                         :" />
+      <TextField fx:id="textamount" layoutX="265.0" layoutY="161.0" prefHeight="31.0" prefWidth="89.0" />
+      <TextField fx:id="texttx" layoutX="265.0" layoutY="125.0" prefHeight="31.0" prefWidth="89.0" />
+      <Label layoutX="107.0" layoutY="130.0" text="Transaction Number:" />
+      <Label fx:id="lblprice" layoutX="265.0" layoutY="236.0" text="-" />
+      <Label layoutX="107.0" layoutY="236.0" text="Price                         :" />
+      <Label fx:id="lblid" layoutX="266.0" layoutY="202.0" text="-" />
+      <Label layoutX="107.0" layoutY="166.0" text="Buy Amount             :" />
+      <Label layoutX="107.0" layoutY="202.0" text="Item ID                     :" />
+      <Label layoutX="107.0" layoutY="268.0" text="Total Price                :" />
+      <Label fx:id="lbltotalprice" layoutX="266.0" layoutY="268.0" text="-" />
+   </children>
+</AnchorPane>

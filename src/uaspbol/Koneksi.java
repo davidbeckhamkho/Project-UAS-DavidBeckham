@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package utspbol;
+package uaspbol;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -25,7 +25,7 @@ public class Koneksi {
     public void bukaKoneksi() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            dbKoneksi = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_uts_pbol?user=root&password=");
+            dbKoneksi = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_uts_pbol?user=root&password=valoanjing");
         } catch (Exception e) {
             e.printStackTrace();
         }

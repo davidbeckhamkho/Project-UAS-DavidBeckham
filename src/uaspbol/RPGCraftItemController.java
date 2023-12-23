@@ -2,10 +2,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXML2.java to edit this template
  */
-package utspbol;
+package uaspbol;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
@@ -24,6 +28,9 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -34,6 +41,7 @@ public class RPGCraftItemController implements Initializable {
     DBRaw dtraw = new DBRaw();
     DBProc dtproc = new DBProc();
     DBItem dtitem = new DBItem();
+    DBTransaction dttrx = new DBTransaction();
 
     @FXML
     private TableView<RawModel> tbvraw;
@@ -60,6 +68,18 @@ public class RPGCraftItemController implements Initializable {
     @FXML
     private TableColumn<ItemModel, String> colamountitem;
     @FXML
+    private TableView<TransactionModel> tbvtrx;
+    @FXML
+    private TableColumn<TransactionModel, String> colnumtx;
+    @FXML
+    private TableColumn<TransactionModel, String> coldate;
+    @FXML
+    private TableColumn<TransactionModel, String> colbuyamount;
+    @FXML
+    private TableColumn<TransactionModel, String> colidbuyitem;
+    @FXML
+    private TableColumn<TransactionModel, String> colprice;
+    @FXML
     private Label label;
     
     @FXML
@@ -67,6 +87,7 @@ public class RPGCraftItemController implements Initializable {
         ObservableList<RawModel> dataRaw = dtraw.Load();
         ObservableList<ProcModel> dataProc = dtproc.Load();
         ObservableList<ItemModel> dataItem = dtitem.Load();
+        ObservableList<TransactionModel> dataTrx = dttrx.Load();
         
         if(dataRaw!=null){
             colidraw.setCellValueFactory(rawData -> new SimpleStringProperty(rawData.getValue().getIdRaw()));
@@ -100,10 +121,21 @@ public class RPGCraftItemController implements Initializable {
             a.showAndWait();
             tbvitem.getScene().getWindow().hide();
         }
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        if(dataTrx!=null){
+            colnumtx.setCellValueFactory(trxdata -> new SimpleStringProperty(trxdata.getValue().getNumtx()));
+            coldate.setCellValueFactory(trxdata -> new SimpleStringProperty(df.format(trxdata.getValue().getTxtime())));
+            colbuyamount.setCellValueFactory(trxdata -> new SimpleStringProperty(trxdata.getValue().getBuyamount()));
+            colidbuyitem.setCellValueFactory(trxdata -> new SimpleStringProperty(trxdata.getValue().getIditem()));
+            colprice.setCellValueFactory(trxdata -> new SimpleStringProperty(trxdata.getValue().getPrice()));
+            tbvtrx.setItems(dataTrx);
+        } else {
+            Alert a=new Alert(Alert.AlertType.ERROR,"Data kosong",ButtonType.OK);
+            a.showAndWait();
+            tbvitem.getScene().getWindow().hide();
+        }
         
         tbvraw.getSelectionModel().selectFirst();
-        
-        
     }
     
     @FXML
@@ -138,12 +170,7 @@ public class RPGCraftItemController implements Initializable {
         } catch (IOException e){
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        showdata();
-    }    
+    }  
 
     @FXML
     private void deleteItem(ActionEvent event) {
@@ -162,5 +189,64 @@ public class RPGCraftItemController implements Initializable {
            }    
            showdata();
         }
+    }
+
+    @FXML
+    private void transactionClick(ActionEvent event) {
+        try{  
+            FXMLLoader loader=new FXMLLoader(getClass().getResource("Transaction.fxml"));    
+            Parent root = (Parent)loader.load();
+            Scene scene = new Scene(root);
+            Stage stg=new Stage();
+            stg.initModality(Modality.APPLICATION_MODAL);
+            stg.setResizable(false);
+            stg.setIconified(false);
+            stg.setScene(scene);
+            stg.show();        
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+    
+    @FXML
+    private void simulationClick(ActionEvent event) {
+        try{  
+            FXMLLoader loader=new FXMLLoader(getClass().getResource("Simulation.fxml"));    
+            Parent root = (Parent)loader.load();
+            Scene scene = new Scene(root);
+            Stage stg=new Stage();
+            stg.initModality(Modality.APPLICATION_MODAL);
+            stg.setResizable(false);
+            stg.setIconified(false);
+            stg.setScene(scene);
+            stg.show();        
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void cetakReportItem(ActionEvent event) {
+        dtitem.cetakReportItem();
+    }
+    
+    @FXML
+    private void cetakReportProc(ActionEvent event) {
+        dtproc.cetakReportProcessed();
+    }
+    
+    @FXML
+    private void cetakReportRaw(ActionEvent event) {
+        dtraw.cetakReportRaw();
+    }
+
+    @FXML
+    private void cetakReportTransaction(ActionEvent event) {
+        dttrx.cetakReportTransaction();
+    }
+    
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        showdata();
     }
 }

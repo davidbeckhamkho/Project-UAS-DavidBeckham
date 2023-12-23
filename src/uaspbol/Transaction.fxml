@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uaspbol.TransactionController">
+   <children>
+      <Button fx:id="btnBack" layoutX="527.0" layoutY="24.0" mnemonicParsing="false" onAction="#backClick" text="Back to Inventory" />
+      <Label layoutX="261.0" layoutY="21.0" text="TRANSACTION">
+         <font>
+            <Font name="System Bold" size="25.0" />
+         </font>
+      </Label>
+      <Line endX="699.0" layoutY="70.0" strokeWidth="3.0" />
+      <TableView fx:id="tbvitem" layoutX="31.0" layoutY="131.0" onMouseClicked="#pilihItem" prefHeight="217.0" prefWidth="292.0">
+        <columns>
+          <TableColumn fx:id="coliditem" prefWidth="49.0" text="ID" />
+          <TableColumn fx:id="colnameitem" prefWidth="176.0" text="Name" />
+            <TableColumn fx:id="colamountitem" prefWidth="66.0" text="Amount" />
+        </columns>
+      </TableView>
+      <Label layoutX="31.0" layoutY="89.0" text="Select an Item:">
+         <font>
+            <Font name="System Bold" size="17.0" />
+         </font>
+      </Label>
+      <Label layoutX="356.0" layoutY="239.0" text="Item ID                     :" />
+      <Label layoutX="356.0" layoutY="203.0" text="Buy Amount             :" />
+      <Label fx:id="lblid" layoutX="515.0" layoutY="239.0" text="-" />
+      <Label layoutX="356.0" layoutY="273.0" text="Price                         :" />
+      <Label fx:id="lblprice" layoutX="514.0" layoutY="273.0" text="-" />
+      <Button fx:id="btnbuy" layoutX="492.0" layoutY="317.0" mnemonicParsing="false" onAction="#buyClick" text="Buy" />
+      <Label layoutX="356.0" layoutY="167.0" text="Transaction Number:" />
+      <TextField fx:id="texttx" layoutX="514.0" layoutY="162.0" prefHeight="31.0" prefWidth="89.0" />
+      <TextField fx:id="textamount" layoutX="514.0" layoutY="198.0" prefHeight="31.0" prefWidth="89.0" />
+      <Label layoutX="356.0" layoutY="131.0" text="Date                         :" />
+      <DatePicker fx:id="date" layoutX="514.0" layoutY="126.0" prefHeight="31.0" prefWidth="154.0" />
+   </children>
+</AnchorPane>

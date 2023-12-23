@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXML.java to edit this template
  */
-package utspbol;
+package uaspbol;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -14,7 +14,7 @@ import javafx.stage.Stage;
  *
  * @author David Beckham - 2022130019
  */
-public class UTSPBOL extends Application {
+public class UASPBOL extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
@@ -22,6 +22,7 @@ public class UTSPBOL extends Application {
         
         Scene scene = new Scene(root);
         
+        stage.setResizable(false);
         stage.setScene(scene);
         stage.show();
     }

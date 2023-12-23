@@ -2,38 +2,43 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package utspbol;
+package uaspbol;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
  * @author ASUS
  */
-public class DBItem {
-    private ItemModel dt=new ItemModel();    
-    public ItemModel getItemModel(){return(dt);}
-    public void setItemModel(ItemModel s){dt=s;}
+public class DBProc {
+    private ProcModel dt=new ProcModel();    
+    public ProcModel getProcModel(){return(dt);}
+    public void setProcModel(ProcModel s){dt=s;}
     
-    public ObservableList<ItemModel> Load() {
+    public ObservableList<ProcModel> Load() {
         try {
-            ObservableList<ItemModel> tableData=FXCollections.observableArrayList();
+            ObservableList<ProcModel> tableData=FXCollections.observableArrayList();
             Koneksi con = new Koneksi();            
             con.bukaKoneksi();
             con.statement = con.dbKoneksi.createStatement();
-            ResultSet rs = con.statement.executeQuery("SELECT iditem, nameitem, amountitem FROM item");
+            ResultSet rs = con.statement.executeQuery("SELECT idproc, nameproc, amountproc FROM processedmaterial");
             
             int i = 1;
             while (rs.next()) {
-                ItemModel d=new ItemModel();
-                d.setIdItem(rs.getString("iditem"));                
-                d.setNameItem(rs.getString("nameitem"));
-                d.setAmountItem(rs.getString("amountitem"));
-
-                tableData.add(d);                
+                ProcModel d=new ProcModel();
+                d.setIdProc(rs.getString("idproc"));                
+                d.setNameProc(rs.getString("nameproc"));
+                d.setAmountProc(rs.getString("amountproc"));
+                
+                tableData.add(d);
                 i++;            
             }
             
@@ -51,8 +56,8 @@ public class DBItem {
             Koneksi con = new Koneksi();            
             con.bukaKoneksi();
             con.statement = con.dbKoneksi.createStatement();
-            ResultSet rs = con.statement.executeQuery("SELECT count(*) AS jml FROM item WHERE iditem = '" + nomor + "'");
-            while (rs.next()) {                
+            ResultSet rs = con.statement.executeQuery("SELECT count(*) AS jml FROM processedmaterial WHERE idproc = '" + nomor + "'");
+            while (rs.next()) {
                 val = rs.getInt("jml");            
             }            
             con.tutupKoneksi();
@@ -67,10 +72,10 @@ public class DBItem {
         Koneksi con = new Koneksi();
         try {       
             con.bukaKoneksi();
-            con.preparedStatement = con.dbKoneksi.prepareStatement("INSERT INTO item (iditem, nameitem, amountitem) VALUES (?,?,?)");
-            con.preparedStatement.setString(1, getItemModel().getIdItem());           
-            con.preparedStatement.setString(2, getItemModel().getNameItem());
-            con.preparedStatement.setString(3, getItemModel().getAmountItem());
+            con.preparedStatement = con.dbKoneksi.prepareStatement("INSERT INTO processedmaterial (idproc, nameproc, amountproc) VALUES (?,?,?)");
+            con.preparedStatement.setString(1, getProcModel().getIdProc());           
+            con.preparedStatement.setString(2, getProcModel().getNameProc());
+            con.preparedStatement.setString(3, getProcModel().getAmountProc());
             con.preparedStatement.executeUpdate();
             berhasil = true;
         } catch (Exception e) {            
@@ -87,7 +92,7 @@ public class DBItem {
         Koneksi con = new Koneksi();
         try {
             con.bukaKoneksi();
-            con.preparedStatement = con.dbKoneksi.prepareStatement("DELETE FROM item WHERE iditem  = ? ");
+            con.preparedStatement = con.dbKoneksi.prepareStatement("DELETE FROM processedmaterial WHERE idproc  = ? ");
             con.preparedStatement.setString(1, nomor);
             con.preparedStatement.executeUpdate();
             berhasil = true;
@@ -95,7 +100,7 @@ public class DBItem {
             e.printStackTrace();
         } finally {            
             con.tutupKoneksi();            
-            return berhasil;
+            return berhasil;        
         }
     }
     
@@ -104,18 +109,34 @@ public class DBItem {
         Koneksi con = new Koneksi();
         try {            
             con.bukaKoneksi();
-            con.preparedStatement = con.dbKoneksi.prepareStatement("UPDATE item SET nameitem = ?, amountitem = ? WHERE iditem = ? ");
-            con.preparedStatement.setString(1, getItemModel().getNameItem());
-            con.preparedStatement.setString(2, getItemModel().getAmountItem());
-            con.preparedStatement.setString(3, getItemModel().getIdItem());
+            con.preparedStatement = con.dbKoneksi.prepareStatement("UPDATE processedmaterial SET nameproc = ?, amountproc = ? WHERE  idproc = ? ");
+            con.preparedStatement.setString(1, getProcModel().getNameProc());
+            con.preparedStatement.setString(2, getProcModel().getAmountProc());
+            con.preparedStatement.setString(3, getProcModel().getIdProc());
             con.preparedStatement.executeUpdate();
             berhasil = true;
-        } catch (Exception e) {
+        } catch (Exception e) {            
             e.printStackTrace();            
             berhasil = false;
-        } finally {            
+        } finally {
             con.tutupKoneksi();            
             return berhasil;        
         }    
+    }
+    
+    public void cetakReportProcessed(){
+        Koneksi con = new Koneksi();        
+        String is = "./src/uaspbol/ReportProc.jasper";   
+        Map map = new HashMap(); 
+        map.put("judul", "Processed Material Report");
+        con.bukaKoneksi();
+        try{
+           JasperPrint jasperPrint = JasperFillManager.fillReport(is, map,  con.dbKoneksi);
+           JasperViewer.viewReport(jasperPrint, false);
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+        con.tutupKoneksi();
     }
 }

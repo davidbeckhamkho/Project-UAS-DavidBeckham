@@ -2,38 +2,42 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package utspbol;
+package uaspbol;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
  * @author ASUS
  */
-public class DBRaw {
-    private RawModel dt=new RawModel();    
-    public RawModel getRawModel(){return(dt);}
-    public void setRawModel(RawModel s){dt=s;}
+public class DBItem {
+    private ItemModel dt=new ItemModel();    
+    public ItemModel getItemModel(){return(dt);}
+    public void setItemModel(ItemModel s){dt=s;}
     
-    public ObservableList<RawModel> Load() {
+    public ObservableList<ItemModel> Load() {
         try {
-            ObservableList<RawModel> tableData=FXCollections.observableArrayList();
+            ObservableList<ItemModel> tableData=FXCollections.observableArrayList();
             Koneksi con = new Koneksi();            
             con.bukaKoneksi();
             con.statement = con.dbKoneksi.createStatement();
-            ResultSet rs = con.statement.executeQuery("SELECT idraw, nameraw, amountraw FROM rawmaterial");
+            ResultSet rs = con.statement.executeQuery("SELECT iditem, nameitem, amountitem FROM item");
             
             int i = 1;
             while (rs.next()) {
-                RawModel d=new RawModel();
-                d.setIdRaw(rs.getString("idraw"));                
-                d.setNameRaw(rs.getString("nameraw"));
-                d.setAmountRaw(rs.getString("amountraw"));
-                
+                ItemModel d=new ItemModel();
+                d.setIdItem(rs.getString("iditem"));                
+                d.setNameItem(rs.getString("nameitem"));
+                d.setAmountItem(rs.getString("amountitem"));
+
                 tableData.add(d);                
                 i++;            
             }
@@ -52,7 +56,7 @@ public class DBRaw {
             Koneksi con = new Koneksi();            
             con.bukaKoneksi();
             con.statement = con.dbKoneksi.createStatement();
-            ResultSet rs = con.statement.executeQuery("SELECT count(*) AS jml FROM rawmaterial WHERE idraw = '" + nomor + "'");
+            ResultSet rs = con.statement.executeQuery("SELECT count(*) AS jml FROM item WHERE iditem = '" + nomor + "'");
             while (rs.next()) {                
                 val = rs.getInt("jml");            
             }            
@@ -68,10 +72,10 @@ public class DBRaw {
         Koneksi con = new Koneksi();
         try {       
             con.bukaKoneksi();
-            con.preparedStatement = con.dbKoneksi.prepareStatement("INSERT INTO rawmaterial (idraw, nameraw, amountraw) VALUES (?,?,?)");
-            con.preparedStatement.setString(1, getRawModel().getIdRaw());           
-            con.preparedStatement.setString(2, getRawModel().getNameRaw());
-            con.preparedStatement.setString(3, getRawModel().getAmountRaw());
+            con.preparedStatement = con.dbKoneksi.prepareStatement("INSERT INTO item (iditem, nameitem, amountitem) VALUES (?,?,?)");
+            con.preparedStatement.setString(1, getItemModel().getIdItem());           
+            con.preparedStatement.setString(2, getItemModel().getNameItem());
+            con.preparedStatement.setString(3, getItemModel().getAmountItem());
             con.preparedStatement.executeUpdate();
             berhasil = true;
         } catch (Exception e) {            
@@ -88,7 +92,7 @@ public class DBRaw {
         Koneksi con = new Koneksi();
         try {
             con.bukaKoneksi();
-            con.preparedStatement = con.dbKoneksi.prepareStatement("DELETE FROM rawmaterial WHERE idraw  = ? ");
+            con.preparedStatement = con.dbKoneksi.prepareStatement("DELETE FROM item WHERE iditem  = ? ");
             con.preparedStatement.setString(1, nomor);
             con.preparedStatement.executeUpdate();
             berhasil = true;
@@ -96,7 +100,7 @@ public class DBRaw {
             e.printStackTrace();
         } finally {            
             con.tutupKoneksi();            
-            return berhasil;        
+            return berhasil;
         }
     }
     
@@ -105,18 +109,34 @@ public class DBRaw {
         Koneksi con = new Koneksi();
         try {            
             con.bukaKoneksi();
-            con.preparedStatement = con.dbKoneksi.prepareStatement("UPDATE rawmaterial SET nameraw = ?, amountraw = ? WHERE  idraw = ? ");
-            con.preparedStatement.setString(1, getRawModel().getNameRaw());
-            con.preparedStatement.setString(2, getRawModel().getAmountRaw());
-            con.preparedStatement.setString(3, getRawModel().getIdRaw());
+            con.preparedStatement = con.dbKoneksi.prepareStatement("UPDATE item SET nameitem = ?, amountitem = ? WHERE iditem = ? ");
+            con.preparedStatement.setString(1, getItemModel().getNameItem());
+            con.preparedStatement.setString(2, getItemModel().getAmountItem());
+            con.preparedStatement.setString(3, getItemModel().getIdItem());
             con.preparedStatement.executeUpdate();
             berhasil = true;
-        } catch (Exception e) {            
+        } catch (Exception e) {
             e.printStackTrace();            
             berhasil = false;
         } finally {            
             con.tutupKoneksi();            
             return berhasil;        
         }    
+    }
+    
+    public void cetakReportItem(){
+        Koneksi con = new Koneksi();        
+        String is = "./src/uaspbol/ReportItem.jasper";   
+        Map map = new HashMap(); 
+        map.put("judul", "Item Report");
+        con.bukaKoneksi();        
+        try{
+           JasperPrint jasperPrint = JasperFillManager.fillReport(is, map,  con.dbKoneksi);
+           JasperViewer.viewReport(jasperPrint, false);
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+        con.tutupKoneksi();
     }
 }
